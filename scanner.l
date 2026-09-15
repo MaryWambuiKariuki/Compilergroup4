@@ -22,12 +22,8 @@
     printf("KEYWORD: RETURN\n");
 }
 
-[0-9]+ {
-    printf("NUMBER: %s\n", yytext);
-}
-
-[a-zA-Z][a-zA-Z0-9]* {
-    printf("IDENTIFIER: %s\n", yytext);
+">=" {
+    printf("OPERATOR: >=\n");
 }
 
 "=" {
@@ -48,6 +44,34 @@
 
 "/" {
     printf("OPERATOR: /\n");
+}
+
+"(" {
+    printf("SPECIAL CHARACTER: (\n");
+}
+
+")" {
+    printf("SPECIAL CHARACTER: )\n");
+}
+
+"{" {
+    printf("SPECIAL CHARACTER: {\n");
+}
+
+"}" {
+    printf("SPECIAL CHARACTER: }\n");
+}
+
+";" {
+    printf("SPECIAL CHARACTER: ;\n");
+}
+
+[0-9]+ {
+    printf("NUMBER: %s\n", yytext);
+}
+
+[a-zA-Z][a-zA-Z0-9]* {
+    printf("IDENTIFIER: %s\n", yytext);
 }
 
 [ \t\n]+ {
