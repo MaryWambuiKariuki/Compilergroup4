@@ -1,77 +1,33 @@
-%option noyywrap
-
 %{
 #include <stdio.h>
+
+int keywords = 0;
+int identifiers = 0;
+int numbers = 0;
+int operators = 0;
+int special_characters = 0;
 %}
 
 %%
 
-"int" {
-    printf("KEYWORD: INT\n");
+"Int"|"float"|"char"|"if"|"else"|"while"|"return" {
+    keywords++;
 }
 
-"if" {
-    printf("KEYWORD: IF\n");
-}
-
-"else" {
-    printf("KEYWORD: ELSE\n");
-}
-
-"return" {
-    printf("KEYWORD: RETURN\n");
-}
-
-">=" {
-    printf("OPERATOR: >=\n");
-}
-
-"=" {
-    printf("OPERATOR: =\n");
-}
-
-"+" {
-    printf("OPERATOR: +\n");
-}
-
-"-" {
-    printf("OPERATOR: -\n");
-}
-
-"*" {
-    printf("OPERATOR: *\n");
-}
-
-"/" {
-    printf("OPERATOR: /\n");
-}
-
-"(" {
-    printf("SPECIAL CHARACTER: (\n");
-}
-
-")" {
-    printf("SPECIAL CHARACTER: )\n");
-}
-
-"{" {
-    printf("SPECIAL CHARACTER: {\n");
-}
-
-"}" {
-    printf("SPECIAL CHARACTER: }\n");
-}
-
-";" {
-    printf("SPECIAL CHARACTER: ;\n");
+[a-zA-Z_][a-zA-Z0-9_]* {
+    identifiers++;
 }
 
 [0-9]+ {
-    printf("NUMBER: %s\n", yytext);
+    numbers++;
 }
 
-[a-zA-Z][a-zA-Z0-9]* {
-    printf("IDENTIFIER: %s\n", yytext);
+"+"|"-"|"*"|"/"|"="|"=="|"!="|"<"|">" {
+    operators++;
+}
+
+[{}();,\[\]] {
+    special_characters++;
 }
 
 [ \t\n]+ {
@@ -79,13 +35,37 @@
 }
 
 . {
-    printf("UNKNOWN: %s\n", yytext);
+    printf("Unknown character: %s\n", yytext);
 }
 
 %%
 
+int yywrap()
+{
+    return 1;
+}
+
 int main()
 {
+    yyin = fopen("test.txt", "r");
+
+    if (yyin == NULL)
+    {
+        printf("Could not open test.txt\n");
+        return 1;
+    }
+
     yylex();
+
+    printf("\nLexical Analysis Results:\n");
+    printf("-------------------------\n");
+    printf("Keywords : %d\n", keywords);
+    printf("Identifiers : %d\n", identifiers);
+    printf("Numbers : %d\n", numbers);
+    printf("Operators : %d\n", operators);
+    printf("Special characters : %d\n", special_characters);
+
+    fclose(yyin);
+
     return 0;
 }
